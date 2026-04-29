@@ -30,7 +30,7 @@ WORKDIR /var/www
 
 # Copy composer manifests first (layer caching)
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist \
+RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --ignore-platform-reqs \
     && composer clear-cache
 
 # Copy application code
