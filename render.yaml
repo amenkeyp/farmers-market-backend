@@ -26,7 +26,7 @@ services:
       - key: DB_USERNAME
         value: farmers_market
       - key: DB_PASSWORD
-        # Set this via Render Dashboard (Settings > Environment) after first deploy for security.
+        value: ""  # Set this via Render Dashboard (Settings > Environment) after first deploy for security.
       - key: SANCTUM_STATEFUL_DOMAINS
         value: "localhost:3000,localhost:5173,farmers-market-api.onrender.com"
       - key: SESSION_DOMAIN
