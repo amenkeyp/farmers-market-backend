@@ -12,15 +12,15 @@ chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache 2>/dev/null
 chmod -R 775 /var/www/storage /var/www/bootstrap/cache 2>/dev/null || true
 
 # Laravel runtime optimizations.
-# NOTE: On Render, env vars are injected at runtime, so we cache here in the entrypoint.
-# If you change env vars frequently without redeploying, remove config:cache.
-php artisan config:cache --ansi || true
+# NOTE: config:cache is REMOVED because it freezes env vars at boot time.
+# On PaaS like Railway/Render, env vars are injected at runtime and may change.
 php artisan route:cache --ansi || true
 php artisan view:cache --ansi || true
 
 # Database migrations (idempotent, safe to run on every boot)
+# Made non-fatal so the container doesn't crash-loop while DB is being configured.
 echo "Running database migrations..."
-php artisan migrate --force --ansi
+php artisan migrate --force --ansi || echo "Migrations skipped - DB may not be configured yet"
 
 # Optional: seed on first run only. Uncomment if you want auto-seeding.
 # php artisan db:seed --force --ansi || true
