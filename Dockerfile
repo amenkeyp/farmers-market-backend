@@ -41,7 +41,9 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
     && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 # Generate optimized autoloader & run Laravel scripts
-RUN composer dump-autoload --optimize \
+# Use a temporary APP_KEY so artisan can boot during build
+RUN echo "APP_KEY=base64:dHVtbXk6Zm9yLWJ1aWxkLW9ubHktcmVwbGFjZWQtYXQtcnVudGltZQ==" > .env \
+    && composer dump-autoload --optimize \
     && php artisan package:discover --ansi
 
 # Copy Docker configs
