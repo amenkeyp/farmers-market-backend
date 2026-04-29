@@ -1,0 +1,190 @@
+{
+  "info": {
+    "name": "Farmers Market Platform API",
+    "description": "Production-grade REST API. Set {{base_url}} (e.g. http://127.0.0.1:8000/api) and login first; the token is auto-saved.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000/api" },
+    { "key": "token", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"email\": \"admin@market.ci\",\n  \"password\": \"password\",\n  \"device_name\": \"postman\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res && res.data && res.data.token) {",
+                  "  pm.collectionVariables.set('token', res.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        { "name": "Me", "request": { "method": "GET", "url": "{{base_url}}/auth/me" } },
+        { "name": "Logout", "request": { "method": "POST", "url": "{{base_url}}/auth/logout" } }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        { "name": "List", "request": { "method": "GET", "url": "{{base_url}}/users" } },
+        {
+          "name": "Create supervisor (admin only)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/users",
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"name\": \"New Supervisor\",\n  \"email\": \"sup2@market.ci\",\n  \"password\": \"password\",\n  \"role\": \"supervisor\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        { "name": "Tree", "request": { "method": "GET", "url": "{{base_url}}/categories?tree=1" } },
+        { "name": "List", "request": { "method": "GET", "url": "{{base_url}}/categories" } },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/categories",
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"name\": \"Hévéa\",\n  \"parent_id\": null\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        { "name": "List", "request": { "method": "GET", "url": "{{base_url}}/products" } },
+        { "name": "Search by SKU/name", "request": { "method": "GET", "url": "{{base_url}}/products?search=cacao" } }
+      ]
+    },
+    {
+      "name": "Farmers",
+      "item": [
+        { "name": "List", "request": { "method": "GET", "url": "{{base_url}}/farmers" } },
+        { "name": "Search by identifier", "request": { "method": "GET", "url": "{{base_url}}/farmers?search=CI-FARM-0004" } },
+        { "name": "Search by phone", "request": { "method": "GET", "url": "{{base_url}}/farmers?search=+2250707000004" } },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/farmers",
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"identifier\": \"CI-FARM-9999\",\n  \"first_name\": \"Test\",\n  \"last_name\": \"Farmer\",\n  \"phone\": \"+2250708000099\",\n  \"village\": \"San-Pédro\",\n  \"region\": \"San-Pédro\",\n  \"credit_limit\": 250000\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        { "name": "List", "request": { "method": "GET", "url": "{{base_url}}/transactions" } },
+        {
+          "name": "Checkout (cash)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/transactions",
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"farmer_id\": 1,\n  \"type\": \"cash\",\n  \"items\": [\n    { \"product_id\": 1, \"quantity\": 10 },\n    { \"product_id\": 6, \"quantity\": 1 }\n  ],\n  \"notes\": \"Achat comptant\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Checkout (credit, 5%)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/transactions",
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"farmer_id\": 4,\n  \"type\": \"credit\",\n  \"interest_rate\": 0.05,\n  \"items\": [\n    { \"product_id\": 8, \"quantity\": 5 },\n    { \"product_id\": 2, \"quantity\": 20 }\n  ],\n  \"notes\": \"Crédit intrants\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Debts",
+      "item": [
+        { "name": "Open debts (FIFO)", "request": { "method": "GET", "url": "{{base_url}}/debts?open_only=1&sort=fifo" } },
+        { "name": "By farmer", "request": { "method": "GET", "url": "{{base_url}}/debts?farmer_id=4" } },
+        { "name": "Overdue", "request": { "method": "GET", "url": "{{base_url}}/debts?overdue=1" } }
+      ]
+    },
+    {
+      "name": "Repayments",
+      "item": [
+        { "name": "List", "request": { "method": "GET", "url": "{{base_url}}/repayments" } },
+        {
+          "name": "Pay (FIFO partial)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/repayments",
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"farmer_id\": 4,\n  \"amount\": 50000,\n  \"method\": \"cash\",\n  \"notes\": \"Acompte 1\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Pay (overpayment)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/repayments",
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"farmer_id\": 4,\n  \"amount\": 9999999,\n  \"method\": \"cash\",\n  \"notes\": \"Solde total\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
