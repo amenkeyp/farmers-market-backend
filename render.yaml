@@ -2,23 +2,27 @@ services:
   - type: web
     name: farmers-market-api
     env: docker
-    region: frankfurt        # or oregon, singapore, etc.
-    plan: starter            # free tier: set to 'starter'; paid: 'standard' etc.
+    # region options: frankfurt, oregon, singapore, etc.
+    region: frankfurt
+    # free tier: 'starter'; paid: 'standard', 'pro', etc.
+    plan: starter
     envVars:
       - key: APP_NAME
         value: "Farmers Market Platform"
       - key: APP_ENV
         value: production
+      # Render will generate and persist a key automatically
       - key: APP_KEY
-        generateValue: true   # Render will generate and persist a key
+        generateValue: true
       - key: APP_DEBUG
         value: "false"
       - key: APP_URL
         value: "https://farmers-market-api.onrender.com"
       - key: DB_CONNECTION
         value: mysql
+      # Change this to your Render MySQL internal hostname or external DB host
       - key: DB_HOST
-        value: "farmers-market-db.internal"   # <- change to your Render MySQL internal hostname
+        value: "farmers-market-db.internal"
       - key: DB_PORT
         value: "3306"
       - key: DB_DATABASE
@@ -26,7 +30,7 @@ services:
       - key: DB_USERNAME
         value: farmers_market
       - key: DB_PASSWORD
-        value: ""  # Set this via Render Dashboard (Settings > Environment) after first deploy for security.
+        value: "CHANGE_ME_IN_RENDER_DASHBOARD"
       - key: SANCTUM_STATEFUL_DOMAINS
         value: "localhost:3000,localhost:5173,farmers-market-api.onrender.com"
       - key: SESSION_DOMAIN
@@ -45,7 +49,8 @@ services:
   # - type: pserv
   #   name: farmers-market-db
   #   env: docker
-  #   dockerfilePath: ./docker/mysql.Dockerfile   # only if you want a self-managed DB
+  #   # only if you want a self-managed DB
+  #   dockerfilePath: ./docker/mysql.Dockerfile
 
 # disks:
 #   - name: farmers-market-storage
