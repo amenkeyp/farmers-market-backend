@@ -30,6 +30,7 @@
 *.sqlite
 *.sqlite3
 /database/*.sqlite
+farmers_market
 
 # OS / IDE
 .DS_Store

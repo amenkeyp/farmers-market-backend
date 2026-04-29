@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: farmers-market-api
+    env: docker
+    region: frankfurt        # or oregon, singapore, etc.
+    plan: starter            # free tier: set to 'starter'; paid: 'standard' etc.
+    envVars:
+      - key: APP_NAME
+        value: "Farmers Market Platform"
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        generateValue: true   # Render will generate and persist a key
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        value: "https://farmers-market-api.onrender.com"
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        value: "farmers-market-db.internal"   # <- change to your Render MySQL internal hostname
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_DATABASE
+        value: farmers_market
+      - key: DB_USERNAME
+        value: farmers_market
+      - key: DB_PASSWORD
+        # Set this via Render Dashboard (Settings > Environment) after first deploy for security.
+      - key: SANCTUM_STATEFUL_DOMAINS
+        value: "localhost:3000,localhost:5173,farmers-market-api.onrender.com"
+      - key: SESSION_DOMAIN
+        value: ".onrender.com"
+      - key: MARKET_DEFAULT_INTEREST_RATE
+        value: "0.05"
+      - key: MARKET_CURRENCY
+        value: "XOF"
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: debug
+
+  # Optional: managed PostgreSQL. Replace with your own MySQL/PostgreSQL instance.
+  # If you already have an external MySQL host, remove this block and set DB_HOST accordingly.
+  # - type: pserv
+  #   name: farmers-market-db
+  #   env: docker
+  #   dockerfilePath: ./docker/mysql.Dockerfile   # only if you want a self-managed DB
+
+# disks:
+#   - name: farmers-market-storage
+#     mountPath: /var/www/storage/app
+#     sizeGB: 1
