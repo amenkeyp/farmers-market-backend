@@ -1,4 +1,4 @@
-FROM php:8.2-fpm-alpine3.20 AS base
+FROM php:8.4-fpm-alpine3.20 AS base
 
 # Install system dependencies and apply security patches
 RUN apk upgrade --no-cache \
