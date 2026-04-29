@@ -36,9 +36,11 @@ RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --ignor
 # Copy application code
 COPY . .
 
-# Set permissions
+# Set permissions and ensure supervisor log directory exists
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
-    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache \
+    && mkdir -p /var/log/supervisor \
+    && chown -R www-data:www-data /var/log/supervisor
 
 # Generate optimized autoloader & run Laravel scripts
 # Use a temporary APP_KEY so artisan can boot during build
