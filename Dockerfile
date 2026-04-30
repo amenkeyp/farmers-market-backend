@@ -50,6 +50,7 @@ RUN echo "APP_KEY=base64:dHVtbXk6Zm9yLWJ1aWxkLW9ubHktcmVwbGFjZWQtYXQtcnVudGltZQ=
 
 # Copy Docker configs
 COPY docker/php.ini /usr/local/etc/php/conf.d/99-laravel.ini
+COPY docker/php-fpm-www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY docker/nginx.conf /etc/nginx/nginx.conf.template
 COPY docker/supervisord.conf /etc/supervisord.conf
 COPY docker/entrypoint.sh /entrypoint.sh
